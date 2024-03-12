@@ -1,1 +1,31 @@
-/
+name: test pipeline
+on: 
+  push:
+    branches:
+      - 'mryhlotska'
+  pull_request:
+    branches: [mryhlotska]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: '18.11.0'
+      - name: Install dependencies
+        run: npm install
+      - name: Start the project
+        run: npm run serve &
+      - name: Wait for Vue server to sleep
+        run: sleep 12s
+      - name: Stop server
+        run: kill $(lsof -t -i :8080) || true
+        
+        
+        
+      
